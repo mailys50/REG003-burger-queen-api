@@ -1,4 +1,5 @@
 const express = require('express');
+const mongoose = require("mongoose");
 const config = require('./config');
 const authMiddleware = require('./middleware/auth');
 const errorHandler = require('./middleware/error');
@@ -9,6 +10,14 @@ const { port, dbUrl, secret } = config;
 const app = express();
 
 // TODO: Conexión a la Base de Datos (MongoDB o MySQL)
+
+mongoose
+  .connect(config.dbUrl, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(console.log('exito'))
+  .catch(console.error('error'));
 
 app.set('config', config);
 app.set('pkg', pkg);

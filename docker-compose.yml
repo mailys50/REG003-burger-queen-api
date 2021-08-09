@@ -1,24 +1,15 @@
 version: "3"
 services:
   db:
-     https://hub.docker.com/_/mongo
-  # TODO: configura tu imagen de base de datos, te recomendamos una de estas:
-    # https://hub.docker.com/_/mongo
-    # https://hub.docker.com/_/postgres
-    # https://hub.docker.com/_/mysql
     image: mongo:4
     volumes:
-    - ./db-data:/data/db
+      - ./db-data:/data/db
     environment:
       MONGO_INITDB_ROOT_USERNAME: bq
       MONGO_INITDB_ROOT_PASSWORD: secret
     restart: always
-  
-      networks:
-        - private
-      expose:
-        - 27017
-          #5432
+    networks:
+      - private
   node:
     image: node:12 # https://hub.docker.com/_/node/
     user: node
@@ -31,9 +22,9 @@ services:
       ADMIN_EMAIL: admin@localhost
       ADMIN_PASSWORD: changeme
     volumes:
-      - ./:/home/node/app # montamos el codigo en el HOME del usuario _node_
+      - ./:/home/node/app # montamos el codigo en el HOME del usuario node
     expose:
-      - 8080 # nuestra app corre en el puerto 8080
+      - 8080 # nuestra app corre en el puerto 8080 -puerto mongo 27017
     ports:
       # mapeamos el puerto 8080 de nuestro contenedor al puerto 80 de nuestra
       # máquina
