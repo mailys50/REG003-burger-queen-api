@@ -49,8 +49,3 @@ networks:
     internal: false
   private:
     internal: true
-networks:
-  public:
-    internal: false
-  private:
-    internal: true
