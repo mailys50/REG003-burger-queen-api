@@ -1,4 +1,5 @@
 const bcrypt = require('bcrypt');
+const User = require ('../model/user-model');
 
 const {
   requireAuth,
@@ -8,7 +9,6 @@ const {
 const {
   getUsers,
 } = require('../controller/users');
-
 
 const initAdminUser = (app, next) => {
   const { adminEmail, adminPassword } = app.get('config');
@@ -23,9 +23,14 @@ const initAdminUser = (app, next) => {
   };
 
   // TODO: crear usuaria admin
+  const user = User.findOne({ email: adminEmail });
+  if (!user) {
+    // TODO: crear usuaria admin
+    const newAdminUser = new User(adminUser);
+    newAdminUser.save();
+  }
   next();
 };
-
 
 /*
  * Diagrama de flujo de una aplicación y petición en node - express :

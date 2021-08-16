@@ -9,6 +9,7 @@ const pkg = require('./package.json');
 const {port,dbUrl,secret,} = config;
 
 const app = express();
+console.log(dbUrl);
 
 // TODO: Conexión a la Base de Datos (MongoDB o MySQL)
 mongoose
