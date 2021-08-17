@@ -12,6 +12,7 @@ const app = express();
 console.log(dbUrl);
 
 // TODO: Conexión a la Base de Datos (MongoDB o MySQL)
+mongoose.connect(process.env.DB_URL);
 mongoose
   .connect(dbUrl, {
     useNewUrlParser: true,
