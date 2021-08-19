@@ -23,6 +23,10 @@
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
     "jwt-simple": "^0.5.6",
+<<<<<<< HEAD
+=======
+    "moment": "^2.29.1",
+>>>>>>> 70b9b6066b55cae5adc4fe31d59916d34f10e71f
     "mongoose": "^5.13.6",
     "morgan": "^1.10.0"
   },
