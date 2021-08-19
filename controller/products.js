@@ -1,32 +1,32 @@
-const Product = require('../model/Product-model');
+const Product = require('../model/product-model');
 const bcrypt = require('bcrypt');
 module.exports = {
-//obtener Productos
+  //obtener Productos
   getProducts: (req, resp, next) => {
-      Product.find({}, (err, products) =>{
-          if(err) return res.status(500).send({message: `Error al realizar la petición: ${err}`})
-          if(!products) return resp.status(404).send({message: 'productos no existen'})
-      
-          resp.status(200).send(products)
-        })
+    Product.find({}, (err, products) => {
+      if (err) return res.status(500).send({ message: `Error al realizar la petición: ${err}` })
+      if (!products) return resp.status(404).send({ message: 'productos no existen' })
+
+      resp.status(200).send(products)
+    })
 
   },
 
   getProductId: (req, resp, next) => {
- let productId = req.params.productId
+    let productId = req.params.productId
 
- Product.findById(productId, (err, product) =>{
-     if(err) return res.status(500).send({message: `Error al realizar la petición: ${err}`})
-     if(!product) return res.status(404).send({message:`El producto no existe`})
+    Product.findById(productId, (err, product) => {
+      if (err) return res.status(500).send({ message: `Error al realizar la petición: ${err}` })
+      if (!product) return res.status(404).send({ message: `El producto no existe` })
 
-     resp.status(200).send({product})
- })
- 
-},
+      resp.status(200).send({ product })
+    })
 
-  postProduct: (req, res,next) => {
-console.log("POST/products");
-console.log((req.body));
+  },
+
+  postProduct: (req, res, next) => {
+    console.log("POST/products");
+    console.log((req.body));
 
     let product = new Product()
     product.name = req.body.name
@@ -34,43 +34,43 @@ console.log((req.body));
     product.image = req.body.image
     product.type = req.body.type
     product.dateEntry = req.body.dateEntry
-    
-    product.save((err, productStored)=> {
-      if(err) res.status(500).send({message: `Error al salver en la base de datos: ${err}`})
-   
-      res.status(200).send({product:productStored})
+
+    product.save((err, productStored) => {
+      if (err) res.status(500).send({ message: `Error al salver en la base de datos: ${err}` })
+
+      res.status(200).send({ product: productStored })
     })
-    
+
   },
 
-  putProduct: (req, res,next) => {
+  putProduct: (req, res, next) => {
     let productId = req.params.productId
     let update = req.body
 
     Product.findByIdAndUpdate(productId, update, (err, productUpdate) => {
-      if(err)  res.status(500).send({message: `Error al actualizar producto: ${err}`})
-    
-      res.status(200).send({message: productUpdate})
+      if (err) res.status(500).send({ message: `Error al actualizar producto: ${err}` })
+
+      res.status(200).send({ message: productUpdate })
 
     })
   },
 
-  deleteProduct: (req,res,next) => {
+  deleteProduct: (req, res, next) => {
     let productId = req.params.productId
 
     Product.findById(productId, (err, product) => {
-      if(err)  res.status(500).send({message: `Error al borrar producto: ${err}`})
-    
+      if (err) res.status(500).send({ message: `Error al borrar producto: ${err}` })
+
       product.remove(err => {
-        if(err) res.status(500).send({message:`Error al borrar producto: ${err}`});
-        res.status(200).send({message: 'El producto ha sido eliminado'})
-       
+        if (err) res.status(500).send({ message: `Error al borrar producto: ${err}` });
+        res.status(200).send({ message: 'El producto ha sido eliminado' })
+
       })
-     
- 
-      
-  })
-  
+
+
+
+    })
+
 
   },
 };

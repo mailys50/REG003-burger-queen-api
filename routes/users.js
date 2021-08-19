@@ -6,7 +6,7 @@ const {
 } = require('../middleware/auth');
 
 const {
-  getUsers, postUser, putUser, deleteUser,} = require('../controller/users');
+  getUsers, postUser, putUser, deleteUser, } = require('../controller/users');
 
 const initAdminUser = (app, next) => {
   const { adminEmail, adminPassword } = app.get('config');
@@ -80,7 +80,7 @@ module.exports = (app, next) => {
    * @code {403} si no es ni admin
    */
   //app.get('/users', requireAdmin, getUsers);
-  app.get('/users',  getUsers);
+  app.get('/users', getUsers);
 
   /**
    * @name GET /users/:uid
@@ -147,7 +147,7 @@ module.exports = (app, next) => {
    * @code {404} si la usuaria solicitada no existe
    */
   //app.put('/users/:uid', requireAuth, (req, resp, next) => {  });
-  app.put('/users/:uid',  (req, resp, next) => {
+  app.put('/users/:uid', (req, resp, next) => {
   });
 
   /**

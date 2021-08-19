@@ -8,13 +8,13 @@ const productSchema = mongoose.Schema(
       required: true,
     },
     price: {
-      type: {Number, default:0},
+      type: { Number, default: 0 },
       required: true,
     },
     image: {
       type: String,
       required: false,
-    
+
     },
     type: {
       type: String,
@@ -23,10 +23,14 @@ const productSchema = mongoose.Schema(
     dateEntry: {
       type: Date,
       default: Date.now(),
-      required: true,
+      required: false,
     },
   },
-  { versionKey: false },
+  {
+    versionKey: false,
+    timestamps: true,
+  },
+
 );
 
 //productSchema.plugin(mongoosePaginate);

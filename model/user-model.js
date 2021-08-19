@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
-const bcrypt = require('bcrypt');
-
+const bcrypt = require('bcrypt-nodejs');
+const Schema = mongoose.Schema
 const UserSchema = mongoose.Schema(
   {
     email: {
@@ -13,6 +13,14 @@ const UserSchema = mongoose.Schema(
       type: String,
       select: false,
       require: true,
+    },
+    signpDate:{
+      type: Date,
+      default: Date.now()
+    },
+    lastLogin:{
+     Date
+     
     },
     roles: { admin: { type: Boolean, default: false } },
   },
