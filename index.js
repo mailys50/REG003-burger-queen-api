@@ -6,20 +6,20 @@ const errorHandler = require('./middleware/error');
 const routes = require('./routes');
 const pkg = require('./package.json');
 
-const {port,dbUrl,secret,} = config;
+const { port, dbUrl, secret } = config;
 
 const app = express();
+// eslint-disable-next-line no-console
 console.log(dbUrl);
 
 // TODO: Conexión a la Base de Datos (MongoDB o MySQL)
-mongoose.connect(process.env.DB_URL);
-mongoose
-  .connect(dbUrl, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
+mongoose.connect(dbUrl, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+})
+  // eslint-disable-next-line no-console
   .then(console.log('DB esta conectada'))
-  .catch(err=>console.error(err));
+  .catch((err) => console.error(err));
 
 //
 

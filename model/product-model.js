@@ -13,21 +13,23 @@ const productSchema = mongoose.Schema(
     image: {
       type: String,
       required: false,
-      //default: 'burger1.jpg',
+      // default: 'burger1.jpg',
     },
-    type: {
-      type: String,
-      required: false,
+    category: {
+      type: String, enum: ['Almuerzo', 'Bebestibles'],
     },
     dateEntry: {
       type: Date,
       default: Date.now(),
-      required: true,
+      required: false,
     },
   },
-  { versionKey: false },
+  {
+    versionKey: false,
+    timestamps: true,
+  },
 );
 
-//productSchema.plugin(mongoosePaginate);
+// productSchema.plugin(mongoosePaginate);
 
 module.exports = mongoose.model('Product', productSchema);

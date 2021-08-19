@@ -1,7 +1,9 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 
-const UserSchema = mongoose.Schema(
+const saltRounds = 10;
+
+const UserSchema = new mongoose.Schema(
   {
     email: {
       type: String,
@@ -14,14 +16,54 @@ const UserSchema = mongoose.Schema(
       select: false,
       require: true,
     },
+    signpDate: {
+      type: Date,
+      default: Date.now(),
+    },
+    lastlogin: Date,
     roles: { admin: { type: Boolean, default: false } },
   },
 );
+// Método pre, para hacer operaciones antes de que se guarden los datos en la BD
+// eslint-disable-next-line func-names
+UserSchema.pre('save', function (next) {
+  if (this.isNew || this.isModified('password')) {
+    const document = this;
+    bcrypt.hash(document.password, saltRounds, (err, hashedPassword) => {
+      if (err) {
+        next(err);
+      } else {
+        document.password = hashedPassword;
+        next();
+      }
+    });
+  } else {
+    next();
+  }
+});
 
-UserSchema.methods.encryptPassword = async (password) => {
-  const salt = await bcrypt.genSalt(10);
-  return bcrypt.hash(password, salt);
+// Para comparar el usuario es igual al que está guardado
+UserSchema.methods.comparePassword = async function comparePassword(password) {
+  try {
+    return await bcrypt.compare(password, this.password);
+  } catch (err) {
+    console.error(err);
+  }
 };
+// UserSchema.methods.isCorrectPassword = function(password, callback){
+//   bcrypt.compare(password, this.password, function(err, same){
+//       if (err){
+//           callback(err);
+//       } else {
+//           callback(err, same);
+//       }
+//     });
+// }
+
+// UserSchema.methods.encryptPassword = async (password) => {
+//   const salt = await bcrypt.genSalt(10);
+//   return bcrypt.hash(password, salt);
+// };
 
 module.exports = mongoose.model('User', UserSchema);
 // userSchema.methods.encryptPassword = async (password) => {
