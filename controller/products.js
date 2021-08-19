@@ -1,31 +1,69 @@
-//Metodo http y codigo de respuestas
-// 'use strict'
-// const express = require('express');
-// const bodyParser = require('body-parser');
+const Product = require('../model/Product-model');
+const bcrypt = require('bcrypt');
+module.exports = {
 
-// const app = express()
-// const port = process.env.PORT || 8080
+  getProducts: (req, resp, next) => {
+      Product.find({}, (err, products) =>{
+          if(err) return res.status(500).send({message: `Error al realizar la petición: ${err}`})
+          if(!products) return resp.status(404).send({message: 'productos no existen'})
+      
+          resp.status(200).send(products)
+        })
 
-// //añadimos los middleware
-// app.use(bodyParser.urlencoded({ extended: false}));
-// app.use(bodyParser.json());
+  },
 
+  getProductId: (req, resp, next) => {
+ let productId = req.params.productId
 
-//Hacer api rest de una tienda ficticia online
-//crearndo peticion tipo get para que muestre todos los productos
-app.get('/api/product', (req, res) =>{
-res.send(200,{products: []})
-})
+ Product.findById(productId, (err, product) =>{
+     if(err) return res.status(500).send({message: `Error al realizar la petición: ${err}`})
+     if(!product) return res.status(404).send({message:`El producto no existe`})
 
-//crearndo peticion tipo post para subir  los productos
-app.post('/api/product', (req, res) => {
-console.log(req.body)
-res.status(200).send({message: 'el producto se a recibido'})
-})
+     resp.status(200).send({product})
+ })
+ 
+},
 
-//app.delete('/api/product', (req, res) => {
-// });
+  postProduct: (req, res,next) => {
+console.log("POST/products");
+console.log((req.body));
 
-app.listen(port, () =>{
-    console.log(`API REST respondio correctamente en http://localhost:${port}`);
-})
+    let product = new Product()
+    product.name = req.body.name
+    product.price = req.body.price
+    product.image = req.body.image
+    product.type = req.body.type
+    product.dateEntry = req.body.dateEntry
+    
+    product.save((err, productStored)=> {
+      if(err) res.status(500).send({message: `Error al salver en la base de datos: ${err}`})
+   
+      res.status(200).send({product:productStored})
+    })
+    
+  },
+
+  putProduct: (req, res,next) => {
+  },
+
+  deleteProduct: (req,res,next) => {
+    let productId = req.params.productId
+
+    Product.findById(productId, (err, product) => {
+      if(err)  res.status(500).send({message: `Error al borrar producto: ${err}`})
+    
+      product.remove(err => {
+        if(err) res.status(500).send({message:`Error al borrar producto: ${err}`});
+        res.status(200).send({message: 'El producto ha sido eliminado'})
+       
+      })
+     
+ 
+      
+  })
+  
+
+  },
+};
+// @query {String} [limit=10] Cantitad de elementos por página
+// @query {String} [page=1] Página del listado a consultar
