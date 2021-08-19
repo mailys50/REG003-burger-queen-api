@@ -1,7 +1,7 @@
 const Product = require('../model/Product-model');
 const bcrypt = require('bcrypt');
 module.exports = {
-
+//obtener Productos
   getProducts: (req, resp, next) => {
       Product.find({}, (err, products) =>{
           if(err) return res.status(500).send({message: `Error al realizar la petición: ${err}`})
@@ -44,6 +44,15 @@ console.log((req.body));
   },
 
   putProduct: (req, res,next) => {
+    let productId = req.params.productId
+    let update = req.body
+
+    Product.findByIdAndUpdate(productId, update, (err, productUpdate) => {
+      if(err)  res.status(500).send({message: `Error al actualizar producto: ${err}`})
+    
+      res.status(200).send({message: productUpdate})
+
+    })
   },
 
   deleteProduct: (req,res,next) => {
