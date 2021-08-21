@@ -1,7 +1,11 @@
-const jwt = require('jsonwebtoken');
-const config = require('../config');
 
-const { secret } = config;
+
+const { postAuth } = require('../controller/auth');
+const userModel = require('../model/user-model');
+
+
+
+
 
 /** @module auth */
 module.exports = (app, nextMain) => {
@@ -17,16 +21,9 @@ module.exports = (app, nextMain) => {
    * @code {400} si no se proveen `email` o `password` o ninguno de los dos
    * @auth No requiere autenticación
    */
-  app.post('/auth', (req, resp, next) => {
-    const { email, password } = req.body;
-
-    if (!email || !password) {
-      return next(400);
-    }
-
-    // TODO: autenticar a la usuarix
-    next();
+  app.post('/auth', postAuth, (req, resp, next) => {
+   
   });
 
-  return nextMain();
+ nextMain();
 };

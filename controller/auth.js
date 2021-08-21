@@ -1,18 +1,28 @@
-const mongoose = require('mongoose');
-const User = require('../model/user-model');
-const service = require('../services');
+// const mongoose = require('mongoose');
+const userModel = require('../model/user-model');
+const jwt = require('jsonwebtoken');
+const config = require('../config');
+
+
+
 
 module.exports = {
-  signUp: (req, res, next) => {
-    const user = new User ({
-      email: req.body.email,
-    });
-    user.save((err) => {
-      if (err) res.status(500).send({ message: `Error al crear el usuario: ${err}` });
+    postAuth: (req, resp) => {
+    const { email, password } = req.body;
 
-      return res.status(200).send({ token: service.createToken(user) });
+    if (!email || !password) {
+      return resp.status(400);
+    }
+    // TODO: autenticar a la usuarix
+
+    userModel.findOne({ email: email, password: password }, (err, user) => {
+      if (err) return resp.status(500).send({ message: `Error al realizar la petición: ${err}` });
+      if (!user) return resp.status(404).send({ message: 'user no existen' });
+
+      const token = jwt.sign({ uid: user._id }, config.secret);
+      resp.status(200).send({ token })
     });
-  },
-  signIn: (req, res, next) => {
-  },
+  
+},
+   
 };
