@@ -82,7 +82,7 @@ module.exports = (app, next) => {
    * @code {401} si no hay cabecera de autenticación
    * @code {403} si no es ni admin
    */
-   app.get('/users', getUsers);
+   app.get('/users', requireAuth, getUsers);
   
 
   /**
@@ -101,7 +101,7 @@ module.exports = (app, next) => {
    * @code {403} si no es ni admin o la misma usuaria
    * @code {404} si la usuaria solicitada no existe
    */
-  app.get('/users/:uid', getUserId, (req, resp) => {
+  app.get('/users/:uid',  requireAuth, getUserId, (req, resp) => {
 
   });
   
