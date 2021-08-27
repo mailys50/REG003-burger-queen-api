@@ -1,7 +1,7 @@
 const bcrypt = require('bcrypt');
 const User = require('../model/user-model');
 // const { isauthMongoId } = require('../middleware/products');
-const { isauthEmail, pagination } = require('../pagination');
+const { isAuthEmail, pagination } = require('../pagination');
 const { isAdmin } = require('../middleware/auth');
 
 
@@ -58,7 +58,7 @@ const getUserId = async (req, resp, next) => {
 
   try {
     const { uid } = req.params;
-    const userById = isauthEmail(uid)
+    const userById = isAuthEmail(uid)
       ? await User.findOne({ email: uid })
       : await User.findById(uid);
 
@@ -83,7 +83,7 @@ const postUsers = async (req, resp, next) => {
 
     if (!email || !password) return next(400);
 
-    if (!isauthEmail(email)) return next(400);
+    if (!isAuthEmail(email)) return next(400);
 
     if (password.length < 4) return next(400);
 
@@ -110,7 +110,7 @@ const deleteUser = async (req, resp, next) => {
   try {
 
     const { uid } = req.params;
-    const userById = isauthEmail(uid)
+    const userById = isAuthEmail(uid)
       ? await User.findOneAndDelete({ email: uid })
       : await User.findByIdAndDelete(uid);
 
@@ -132,7 +132,7 @@ const updateUser = async (req, resp, next) => {
   try {
     const { uid } = req.params;
     // eslint-disable-next-line no-nested-ternary
-    const userById = isauthEmail(uid)
+    const userById = isAuthEmail(uid)
       ? await User.findOne({ email: uid })
       : isauthMongoId(uid)
         ? await User.findById(uid)
