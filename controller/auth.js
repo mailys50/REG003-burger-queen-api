@@ -1,31 +1,46 @@
-// const mongoose = require('mongoose');
-const userModel = require('../model/user-model');
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
 const config = require('../config');
+const User = require('../model/user-model');
 
+const { secret } = config;
 
+// DONE: autenticar a la usuarix
 
+module.exports.authUsers = async (req, resp, next) => {
+  const { email, password } = req.body;
 
-module.exports = {
-    postAuth: (req, resp) => {
-        const { email, password } = req.body;
+  if (!email || !password) {
+    return next(400);
+  }
 
-        if (!email || !password) {
-            return resp.status(400);
-        }
-        // TODO: autenticar a la usuarix
+  const authUser = await User.findOne({ email });
 
+  if (!authUser) {
+    return next(404);
+  }
 
-       
-            userModel.findOne({ email: email, password: password }, (err, user) => {
-                if (err) return resp.status(500).send({ message: `Error al realizar la petición: ${err}` });
-                if (!user) return resp.status(404).send({ message: 'user no existen' });
+  const authPassword = bcrypt.compareSync(password, authUser.password);
+  if (!authPassword) {
+    return resp.status(400).json({
+      msg: 'Usuario / Password no son correctos - password',
+    });
+  }
 
-                const token = jwt.sign({ uid: user._id }, config.secret);
-                resp.status(200).send({ token })
-            });
-       
-
+  jwt.sign(
+    {
+      uid: authUser._id,
+      email: authUser.email,
+      roles: authUser.roles,
     },
+    secret,
+    {
+      expiresIn: '4h',
+    },
+    (err, token) => {
+      if (err) console.error(err);
 
+      return resp.status(200).json({ token });
+    },
+  );
 };

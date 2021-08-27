@@ -1,100 +1,181 @@
 const bcrypt = require('bcrypt');
 const User = require('../model/user-model');
+// const { isauthMongoId } = require('../middleware/products');
+const { isauthEmail, pagination } = require('../pagination');
+const { isAdmin } = require('../middleware/auth');
+
+
+// crear admin
+const postAdminUser = async (adminUser, next) => {
+
+  const userFind = await User.findOne({ email: adminUser.email });
+
+  try {
+    if (userFind !== null) {
+      return next(200);
+    }
+
+    const newUser = new User(adminUser);
+    newUser.save();
+    console.info('El usuario ha sido creado');
+
+  } catch (error) {
+    if (error !== 200) return error;
+  }
+  
+};
+
+
+//obteniendo usuario
+const getUsers = async (req, resp, next) => {
+
+  const limit = parseInt(req.query.limit, 10) || 10;
+  const page = parseInt(req.query.page, 10) || 1;
+
+  try {
+    const users = await User.paginate({}, { limit, page });
+
+    const url = `${req.protocol}://${req.get('host')}${req.path}`;
+
+    const links = pagination(users, url, page, limit, users.totalPages);
+
+    resp.links(links);
+
+    if (!users) {
+      return next(404);
+    }
+
+    return resp.json(users.docs);
+
+  } catch (error) {
+    return next(error);
+  }
+};
+
+
+//obteniendo usuario por id
+const getUserId = async (req, resp, next) => {
+
+  try {
+    const { uid } = req.params;
+    const userById = isauthEmail(uid)
+      ? await User.findOne({ email: uid })
+      : await User.findById(uid);
+
+    if (!userById) {
+      return next(404);
+    }
+
+    resp.json(userById);
+
+  } catch (error) {
+    return next(error);
+  }
+};
+
+
+//registrando usuario
+const postUsers = async (req, resp, next) => {
+
+  try {
+    const { email, password, roles } = req.body;
+    const user = new User({ email, password, roles });
+
+    if (!email || !password) return next(400);
+
+    if (!isauthEmail(email)) return next(400);
+
+    if (password.length < 4) return next(400);
+
+    const existingEmail = await User.findOne({ email });
+    if (existingEmail) return next(403);
+
+    const salt = bcrypt.genSaltSync();
+    user.password = bcrypt.hashSync(password, salt);
+
+    // salvar o guardar en database
+    await user.save();
+    resp.json(user);
+
+  } catch (error) {
+    return next(error);
+  }
+
+};
+
+
+// Eliminar usuario
+const deleteUser = async (req, resp, next) => {
+
+  try {
+
+    const { uid } = req.params;
+    const userById = isauthEmail(uid)
+      ? await User.findOneAndDelete({ email: uid })
+      : await User.findByIdAndDelete(uid);
+
+    if (!userById) {
+      return next(404);
+    }
+
+    resp.json(userById);
+
+  } catch (error) {
+    return next(error);
+  }
+};
+
+
+//modificar usuario
+const updateUser = async (req, resp, next) => {
+
+  try {
+    const { uid } = req.params;
+    // eslint-disable-next-line no-nested-ternary
+    const userById = isauthEmail(uid)
+      ? await User.findOne({ email: uid })
+      : isauthMongoId(uid)
+        ? await User.findById(uid)
+        : '';
+    if (!userById) return next(404);
+
+    const { email, password, roles } = req.body;
+
+    if (!isAdmin(req) && roles && roles.admin) return next(403);
+    if (!password && !email) return next(400);
+
+    const isEqualPassword = bcrypt.compareSync(password, userById.password);
+
+    if (!isEqualPassword) {
+      const salt = bcrypt.genSaltSync();
+      userById.password = bcrypt.hashSync(password, salt);
+    }
+    if (!isAdmin(req)) {
+      await User.findByIdAndUpdate(userById._id, userById);
+    } else {
+
+      if (email !== userById.email) {
+        userById.email = email;
+      }
+      if (roles && roles.admin !== userById.roles.admin) {
+        userById.roles.admin = roles.admin;
+      }
+      await User.findByIdAndUpdate(userById._id, userById);
+    }
+    resp.json(userById);
+
+  } catch (error) {
+    return next(error);
+  }
+};
+
 
 
 module.exports = {
-  // obtener usuarios
-    getUsers: (req, resp) => {
-      User.find({}, (err, users) => {
-        if (err) return resp.status(500).send({ message: `Error al realizar la petición: ${err}` });
-        if (!users) return resp.status(404).send({ message: 'useros no existen' });
-  
-        resp.status(200).send(users);
-      });
-    },
-  
-    getUserId: (req, resp) => {
-      // eslint-disable-next-line prefer-destructuring
-      const userId = req.params.userId;
-  
-      User.findById(userId, (err, user) => {
-        if (err) return resp.status(500).send({ message: `Error al realizar la petición: ${err}` });
-        if (!user) return resp.status(404).send({ message: 'El usero no existe' });
-  
-        resp.status(200).send({ user });
-      });
-    },
-  
-    postUser: (req, resp) => {
-      // eslint-disable-next-line no-console
-      console.log('POST/users');
-      // eslint-disable-next-line no-console
-      console.log((req.body));
-  
-      const user = new User();
-      user.email = req.body.email;
-      user.password = req.body.password;
-      user.signDate = req.body.signpDate;
-    
-  
-      user.save((err, userStored) => {
-        if (err) resp.status(500).send({ message: `Error al salver user en la base de datos: ${err}` });
-  
-        resp.status(200).send({ user: userStored });
-      });
-
-    },
-  
-    putUser: (req, resp) => {
-      // eslint-disable-next-line prefer-destructuring
-      const userId = req.params.userId;
-      const update = req.body;
-  
-      User.findByIdAndUpdate(userId, update, (err, userUpdate) => {
-        if (err) resp.status(500).send({ message: `Error al actualizar usero: ${err}` });
-  
-        resp.status(200).send({ message: userUpdate });
-      });
-    },
-  
-    deleteUser: (req, resp) => {
-      // eslint-disable-next-line prefer-destructuring
-      const userId = req.params.userId;
-  
-      User.findById(userId, (err, user) => {
-        if (err) resp.status(500).send({ message: `Error al borrar usero: ${err}` });
-  
-        user.remove((err) => {
-          if (err) resp.status(500).send({ message: `Error al borrar usero: ${err}` });
-          resp.status(200).send({ message: 'El usero ha sido eliminado' });
-        });
-      });
-    },
-  };
-
-
-
-
-// module.exports = {
-//   getUsers: (req, resp, next) => {
-//   // Pagina a consultar
-//   // Limite de elementos por pagina
-//   // const url = `${req.protocol}://${req.get("host")}${req.path}`;
-//     // const pageCurrent = parseInt(page, 10) || 1;
-//     // const limitNumber = parseInt(limit, 10) || 10;
-//     // const url = `${req.protocol}://${req.get('host')}${req.path}`;
-//      //crear usuario
-//     User = new User({
-//         email: req.body.email,
-//       })
-  
-//   },
-//   getUsers: (req, resp, next) => {
-//     //salvar el usuario
-//     User.save((err) => {
-//         if (err) res.status(500).send({ message: `Error al crear el usuario: ${err}` });
-
-//         return res.status(200).send({ token: service.createToken(user) });
-//     });
-// },
-// }
+  getUsers,
+  postAdminUser,
+  postUsers,
+  getUserId,
+  deleteUser,
+  updateUser,
+};
