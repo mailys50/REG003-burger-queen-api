@@ -17,7 +17,7 @@ const postAdminUser = async (adminUser, next) => {
 
     const newUser = new User(adminUser);
     newUser.save();
-    console.info('El usuario ha sido creado');
+    console.info('usuario creado');
 
   } catch (error) {
     if (error !== 200) return error;
@@ -127,16 +127,13 @@ const deleteUser = async (req, resp, next) => {
 
 
 //modificar usuario
-const updateUser = async (req, resp, next) => {
+const putUser = async (req, resp, next) => {
 
   try {
     const { uid } = req.params;
     // eslint-disable-next-line no-nested-ternary
-    const userById = isAuthEmail(uid)
-      ? await User.findOne({ email: uid })
-      : isauthMongoId(uid)
-        ? await User.findById(uid)
-        : '';
+    const userById =  User.findOne({ email: uid })
+   
     if (!userById) return next(404);
 
     const { email, password, roles } = req.body;
@@ -177,5 +174,5 @@ module.exports = {
   postUsers,
   getUserId,
   deleteUser,
-  updateUser,
+  putUser,
 };

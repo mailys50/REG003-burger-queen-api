@@ -8,7 +8,7 @@ const {
   postUsers,
   getUsers,
   deleteUser,
-  updateUser
+  putUser
 } = require('../controller/users');
 
 
@@ -144,7 +144,7 @@ module.exports = (app, next) => {
    * @code {403} una usuaria no admin intenta de modificar sus `roles`
    * @code {404} si la usuaria solicitada no exist e
    */
-   app.put('/users/:uid', requireUser, updateUser);
+   app.put('/users/:uid', requireUser, putUser,);
  
 
   /**

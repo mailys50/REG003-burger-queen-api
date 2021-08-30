@@ -5,26 +5,24 @@ const User = require('../model/user-model');
 
 const { secret } = config;
 
-// DONE: autenticar a la usuarix
-
-module.exports.authUsers = async (req, resp, next) => {
+// TODO autentificar o validar al usuario
+module.exports = {
+authUsers: async (req, resp, next) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
     return next(400);
   }
-
+  //validar email del usuario
   const authUser = await User.findOne({ email });
 
   if (!authUser) {
     return next(404);
   }
-
+//validar password del usuario
   const authPassword = bcrypt.compareSync(password, authUser.password);
   if (!authPassword) {
-    return resp.status(400).json({
-      msg: 'Usuario / Password no son correctos - password',
-    });
+    return next(400);
   }
 
   jwt.sign(
@@ -35,7 +33,7 @@ module.exports.authUsers = async (req, resp, next) => {
     },
     secret,
     {
-      expiresIn: '4h',
+      expiresIn: '3h',
     },
     (err, token) => {
       if (err) console.error(err);
@@ -43,4 +41,5 @@ module.exports.authUsers = async (req, resp, next) => {
       return resp.status(200).json({ token });
     },
   );
+},
 };
