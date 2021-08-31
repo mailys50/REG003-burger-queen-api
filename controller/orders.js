@@ -67,6 +67,7 @@ getOrderById: async (req, resp, next) => {
 
     try {
         const { orderId } = req.params;
+        console.log("soy", orderId);
         const orderById = await Order.findById(orderId);
         if (!orderById) {
             return next(404);

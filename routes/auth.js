@@ -1,20 +1,52 @@
-const { authUsers } = require('../controller/auth');
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
+const config = require('../config');
+const User = require('../model/user-model');
 
-/** @module auth */
+const { secret } = config;
+
+// TODO autentificar o validar al usuario
 module.exports = (app, nextMain) => {
-  /**
-   * @name /auth
-   * @description Crea token de autenticación.
-   * @path {POST} /auth
-   * @body {String} email Correo
-   * @body {String} password Contraseña
-   * @response {Object} resp
-   * @response {String} resp.token Token a usar para los requests sucesivos
-   * @code {200} si la autenticación es correcta
-   * @code {400} si no se proveen `email` o `password` o ninguno de los dos
-   * @auth No requiere autenticación
-   */
-  app.post('/auth', authUsers);
+  app.post('/auth', async (req, resp, next)  => {
+ 
+    const { email, password } = req.body;
 
+    if (!email || !password) {
+      return next(400);
+    }
+    //validar email del usuario
+    const authUser = await User.findOne({ email });
+
+    if (!authUser) {
+      return next(404);
+    }
+    //validar password del usuario
+    const authPassword = bcrypt.compareSync(password, authUser.password);
+    
+    console.log(authPassword);
+    if (!authPassword) {
+      return next(401);
+    }
+
+    const token = jwt.sign(
+
+      {
+        uid: authUser._id,
+        email: authUser.email,
+        roles: authUser.roles,
+        
+      },
+      secret,
+      // {
+      //   // expiresIn: '3h',
+      // // },
+      // (err, token) => {
+      //   if (err) console.error(err);
+
+
+      // },
+    );
+    return resp.status(200).json({ token });
+  });
   return nextMain();
 };

@@ -1,6 +1,5 @@
 const bcrypt = require('bcrypt');
 const User = require('../model/user-model');
-// const { isauthMongoId } = require('../middleware/products');
 const { isAuthEmail, pagination } = require('../pagination');
 const { isAdmin } = require('../middleware/auth');
 
@@ -87,8 +86,8 @@ const postUsers = async (req, resp, next) => {
 
     if (password.length < 4) return next(400);
 
-    const existingEmail = await User.findOne({ email });
-    if (existingEmail) return next(403);
+    const existsEmail = await User.findOne({ email });
+    if (existsEmail) return next(403);
 
     const salt = bcrypt.genSaltSync();
     user.password = bcrypt.hashSync(password, salt);

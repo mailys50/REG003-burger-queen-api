@@ -37,7 +37,7 @@ module.exports = {
     product.dateEntry = req.body.dateEntry;
 
     product.save((err, productStored) => {
-      if (err) resp.status(500).send({ message: `Error al salver en la base de datos: ${err}` });
+      if (err) resp.status(403).send({ message: `Error al salver en la base de datos: ${err}` });
 
       resp.status(200).send({ product: productStored });
     });

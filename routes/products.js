@@ -83,7 +83,7 @@ module.exports = (app, nextMain) => {
    * @code {404} si el producto con `productId` indicado no existe
    */
   // app.post('/products', requireAdmin, (req, resp, next) => {  });
-  app.post('/products',  requireAuth, postProduct,(req, resp, next) => {
+  app.post('/products',  requireAdmin, postProduct,(req, resp, next) => {
   });
   /**
    * @name PUT /products
@@ -110,7 +110,7 @@ module.exports = (app, nextMain) => {
    */
   // app.put('/products/:productId', requireAdmin, (req, resp, next) => {
   // });
-  app.put('/products/:productId', requireAuth, putProduct, (req, resp, next) => {
+  app.put('/products/:productId', requireAdmin, putProduct, (req, resp, next) => {
   });
 
   /**
@@ -133,7 +133,7 @@ module.exports = (app, nextMain) => {
    */
   // app.delete('/products/:productId', requireAdmin, (req, resp, next) => {
   // });
-  app.delete('/products/:productId', requireAuth, deleteProduct, (req, resp, next) => {
+  app.delete('/products/:productId',  requireAdmin, deleteProduct, (req, resp, next) => {
   });
 
   nextMain();
