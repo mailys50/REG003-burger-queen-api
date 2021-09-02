@@ -2,6 +2,7 @@ const path = require('path');
 const { spawn } = require('child_process');
 const nodeFetch = require('node-fetch');
 const kill = require('tree-kill');
+// eslint-disable-next-line import/no-unresolved
 const setUp = require('@shelf/jest-mongodb/setup');
 
 const config = require('../config');
@@ -155,4 +156,3 @@ process.fetch = fetch;
 process.fetchWithAuth = fetchWithAuth;
 process.fetchAsAdmin = fetchAsAdmin;
 process.fetchAsTestUser = fetchAsTestUser;
-

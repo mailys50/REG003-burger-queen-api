@@ -17,6 +17,7 @@
     "docs:deploy": "rm -rf docs && npm run docs:generate && gh-pages -d docs"
   },
   "dependencies": {
+    "@shelf/jest-mongodb": "^2.0.3",
     "bcrypt": "^5.0.1",
     "body-parser": "^1.19.0",
     "dotenv": "^10.0.0",
@@ -25,6 +26,7 @@
     "jwt-simple": "^0.5.6",
     "moment": "^2.29.1",
     "mongoose": "^5.13.7",
+    "mongoose-paginate-v2": "^1.4.2",
     "morgan": "^1.10.0"
   },
   "devDependencies": {

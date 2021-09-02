@@ -2,13 +2,13 @@ const {
   requireAuth,
   requireAdmin,
 } = require('../middleware/auth');
+
 const {
   getProducts,
   getProductId,
   postProduct,
   putProduct,
   deleteProduct,
-
 } = require('../controller/products');
 
 /** @module products */
@@ -35,9 +35,9 @@ module.exports = (app, nextMain) => {
    * @code {200} si la autenticación es correcta
    * @code {401} si no hay cabecera de autenticación
    */
-  // app.get('/products', requireAuth, (req, resp, next) => {  });
-  app.get('/products', requireAuth, getProducts, (req, resp, next) => {
-  });
+  // app.get('/products', requireAuth, (req, resp, next) => {
+  // });
+  app.get('/products', requireAuth, getProducts);
 
   /**
    * @name GET /products/:productId
@@ -56,9 +56,9 @@ module.exports = (app, nextMain) => {
    * @code {401} si no hay cabecera de autenticación
    * @code {404} si el producto con `productId` indicado no existe
    */
-  // app.get('/products', requireAuth, (req, resp, next) => {  });
-  app.get('/products/:productId', requireAuth, getProductId,(req, resp, next) => {
-  });
+  // app.get('/products/:productId', requireAuth, (req, resp, next) => {
+  // });
+  app.get('/products/:productId', requireAuth, getProductId);
 
   /**
    * @name POST /products
@@ -80,11 +80,13 @@ module.exports = (app, nextMain) => {
    * @code {400} si no se indican `name` o `price`
    * @code {401} si no hay cabecera de autenticación
    * @code {403} si no es admin
-   * @code {404} si el producto con `productId` indicado no existe
+   * @code {404} si el producto con `productId` indicado no existe?
    */
-  // app.post('/products', requireAdmin, (req, resp, next) => {  });
-  app.post('/products',  requireAdmin, postProduct,(req, resp, next) => {
-  });
+  // app.post('/products', requireAdmin, (req, resp, next) => {
+  // });
+  // app.post('/products', postProduct);
+  app.post('/products', requireAdmin, postProduct);
+
   /**
    * @name PUT /products
    * @description Modifica un producto
@@ -110,8 +112,7 @@ module.exports = (app, nextMain) => {
    */
   // app.put('/products/:productId', requireAdmin, (req, resp, next) => {
   // });
-  app.put('/products/:productId', requireAdmin, putProduct, (req, resp, next) => {
-  });
+  app.put('/products/:productId', requireAdmin, putProduct);
 
   /**
    * @name DELETE /products
@@ -133,8 +134,7 @@ module.exports = (app, nextMain) => {
    */
   // app.delete('/products/:productId', requireAdmin, (req, resp, next) => {
   // });
-  app.delete('/products/:productId',  requireAdmin, deleteProduct, (req, resp, next) => {
-  });
+  app.delete('/products/:productId', requireAdmin, deleteProduct);
 
   nextMain();
 };

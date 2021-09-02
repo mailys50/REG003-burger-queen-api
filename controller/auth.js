@@ -8,7 +8,7 @@
 // // TODO autentificar o validar al usuario
 // module.exports = (app, nextMain) => {
 //   app.post('/auth', async (req, resp, next)  => {
- 
+
 //     const { email, password } = req.body;
 
 //     if (!email || !password) {
@@ -39,7 +39,6 @@
 //       // // },
 //       // (err, token) => {
 //       //   if (err) console.error(err);
-
 
 //       // },
 //     );
