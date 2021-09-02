@@ -36,7 +36,6 @@ const orderSchema = new Schema({
   },
   dateProcessed: {
     type: Date,
-    default: Date.now,
     // required: true,
   },
 }, { versionKey: false });

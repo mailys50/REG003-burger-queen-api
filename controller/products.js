@@ -43,7 +43,7 @@ module.exports = {
       const product = new Product();
       product.name = req.body.name;
       product.price = req.body.price;
-      product.image = req.body.image;
+      // product.image = req.body.image;
       product.category = req.body.category;
       product.dateEntry = req.body.dateEntry;
       if (!req.body.name || !req.body.price) {
