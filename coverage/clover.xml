@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1630669392135" clover="3.2.0">
-  <project timestamp="1630669392135" name="All files">
+<coverage generated="1630672414770" clover="3.2.0">
+  <project timestamp="1630672414770" name="All files">
     <metrics statements="6" coveredstatements="6" conditionals="4" coveredconditionals="4" methods="2" coveredmethods="2" elements="12" coveredelements="12" complexity="0" loc="6" ncloc="6" packages="1" files="1" classes="1"/>
     <file name="pagination.js" path="C:\Users\laboratoria\Desktop\ultima version\REG003-burger-queen-api\controller\pagination.js">
       <metrics statements="6" coveredstatements="6" conditionals="4" coveredconditionals="4" methods="2" coveredmethods="2"/>
