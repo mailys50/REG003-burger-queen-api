@@ -23,6 +23,8 @@ module.exports = (secret) => (req, resp, next) => {
     if (!authUser) {
       return next(403);
     }
+    // eslint-disable-next-line no-console
+    console.log('autorizado');
     req.authUser = authUser;
     return next();
   });

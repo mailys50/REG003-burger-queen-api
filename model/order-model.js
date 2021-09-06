@@ -10,20 +10,20 @@ const orderSchema = new Schema({
   },
   client: {
     type: String,
+    required: true,
   },
   products: [
     {
-      _id: false,
       qty: {
         type: Number,
+        required: true,
         default: 1,
       },
       product: {
         type: Schema.Types.ObjectId,
         ref: 'Product',
       },
-    },
-  ],
+    }],
   status: {
     type: String,
     enum: ['pending', 'canceled', 'delivering', 'delivered', 'preparing'],
@@ -36,6 +36,7 @@ const orderSchema = new Schema({
   },
   dateProcessed: {
     type: Date,
+    default: Date.now,
     // required: true,
   },
 }, { versionKey: false });

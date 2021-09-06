@@ -3,22 +3,24 @@ const mongoosePaginate = require('mongoose-paginate-v2');
 
 const productSchema = mongoose.Schema(
   {
+    category: {
+      type: String, enum: ['HAMBURGUESA', 'SHAWARMA', 'BEBIDA'],
+    },
     name: {
       type: String,
       required: true,
     },
+
     price: {
       type: { Number, default: 0 },
       required: true,
     },
-    image: {
+    images: {
       type: String,
       required: false,
-      // default: 'burger1.jpg',
+      default: 'burger1.jpg',
     },
-    category: {
-      type: String, enum: ['Almuerzo', 'Bebestibles'],
-    },
+
     dateEntry: {
       type: Date,
       default: Date.now(),

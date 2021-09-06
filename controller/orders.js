@@ -124,8 +124,12 @@ module.exports = {
 
   // eliminar orden
   deleteOrder: async (req, resp, next) => {
+    // eslint-disable-next-line no-console
+    console.log('aqi', req.params);
     try {
       const { orderId } = req.params;
+      // eslint-disable-next-line no-console
+
       if (!orderId.match(/^[0-9a-fA-F]{24}$/)) return next(404);
       const order = await Order.findById(orderId);
       if (!order) {

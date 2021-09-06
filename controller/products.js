@@ -6,7 +6,9 @@ module.exports = {
   getProducts: async (req, resp, next) => {
     try {
       const options = {
+        // eslint-disable-next-line radix
         page: parseInt(req.query.page, 10) || 1,
+        // eslint-disable-next-line radix
         limit: parseInt(req.query.limit, 10) || 10,
       };
       const products = await Product.paginate({}, options);
@@ -43,7 +45,7 @@ module.exports = {
       const product = new Product();
       product.name = req.body.name;
       product.price = req.body.price;
-      // product.image = req.body.image;
+      product.images = req.body.images;
       product.category = req.body.category;
       product.dateEntry = req.body.dateEntry;
       if (!req.body.name || !req.body.price) {

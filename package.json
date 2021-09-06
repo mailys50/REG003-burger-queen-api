@@ -12,6 +12,7 @@
     "test:e2e": "jest --verbose --testPathPattern e2e --globalSetup ./e2e/globalSetup --globalTeardown ./e2e/globalTeardown --runInBand",
     "test:unit": "jest --verbose --testPathIgnorePatterns e2e --coverage",
     "test": "npm run test:e2e && npm run test:unit",
+    "test:jest": "jest",
     "lint": "eslint .",
     "docs:generate": "jsdoc -c jsdoc.conf --readme README-docs.md",
     "docs:deploy": "rm -rf docs && npm run docs:generate && gh-pages -d docs"
@@ -27,7 +28,8 @@
     "moment": "^2.29.1",
     "mongoose": "^5.13.7",
     "mongoose-paginate-v2": "^1.4.2",
-    "morgan": "^1.10.0"
+    "morgan": "^1.10.0",
+    "supertest": "^6.1.6"
   },
   "devDependencies": {
     "docdash": "^1.2.0",
@@ -35,8 +37,8 @@
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-plugin-import": "^2.22.1",
     "gh-pages": "^3.1.0",
-    "jest": "^27.0.1",
-    "jsdoc": "^3.6.6",
+    "jest": "^27.1.0",
+    "jsdoc": "^3.6.7",
     "jsdoc-http-plugin": "^0.3.2",
     "node-fetch": "^2.6.1",
     "nodemon": "^2.0.12",
