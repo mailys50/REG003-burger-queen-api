@@ -10,13 +10,15 @@ const orderSchema = new Schema({
   },
   client: {
     type: String,
-    required: true,
+    require: true,
   },
   products: [
     {
+      _id: false,
       qty: {
         type: Number,
-        required: true,
+        require: true,
+
         default: 1,
       },
       product: {
@@ -36,7 +38,6 @@ const orderSchema = new Schema({
   },
   dateProcessed: {
     type: Date,
-    default: Date.now,
     // required: true,
   },
 }, { versionKey: false });

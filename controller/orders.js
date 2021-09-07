@@ -7,13 +7,7 @@ module.exports = {
   postOrder: async (req, resp, next) => {
     try {
       if (Object.keys(req.body).length === 0) return next(400);
-      const newOrder = new Order();
-      newOrder.userId = req.body.userId;
-      newOrder.client = req.body.client;
-      newOrder.products = req.body.products.map((product) => ({
-        qty: product.qty,
-        product: product.productId,
-      }));
+
       if (!req.body.products || req.body.products.length === 0) {
         return resp.sendStatus(400);
       }
@@ -23,6 +17,15 @@ module.exports = {
       if (!req.body.userId) {
         return resp.sendStatus(400);
       }
+      const fixedProducts = req.body.products.map((el) => ({
+        qty: el.qty,
+        product: el.productId,
+      }
+      ));
+      const newOrder = new Order();
+      newOrder.userId = req.body.userId;
+      newOrder.client = req.body.client;
+      newOrder.products = fixedProducts;
 
       const newOrderSaved = await newOrder.save();
 
@@ -52,11 +55,11 @@ module.exports = {
       if (!orders) {
         return resp.status(404).send({ message: 'Orden no encontrada' });
       }
-      const orderPopulate = await Product.populate(orders, { path: 'products.product' });
+      const orderPopulate = await Product.populate(orders.docs, { path: 'products._id' });
       if (!orderPopulate) {
         return resp.status(404);
       }
-      return resp.status(200).send(orderPopulate.docs);
+      return resp.status(200).send(orderPopulate);
     } catch (err) {
       return next(err);
     }

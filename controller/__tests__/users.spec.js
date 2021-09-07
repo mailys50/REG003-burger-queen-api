@@ -9,6 +9,7 @@ describe('isAuthEmail', () => {
   it('should return true if is a valid email ', () => {
     expect(isAuthEmail(email)).toBe(true);
   });
+
   it('should return false if is an invalid email', () => {
     expect(isAuthEmail('')).toBe(false);
   });
