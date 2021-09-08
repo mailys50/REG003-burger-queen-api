@@ -103,5 +103,10 @@ usando el protocolo HTTP (o HTTPS).
 * npm install jsonwebtoken
 * npm install mongoose    
 
+## 7. Diagrama de flujo del JWT
 
+
+<p align="center">
+  <img src="https://miro.medium.com/max/788/1*0t7t3_pFzIaRXoYr1wTXIA.jpeg" width="350" title="hover text">
  
+</p

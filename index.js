@@ -1,13 +1,12 @@
 const mongoose = require('mongoose');
 const express = require('express');
 // eslint-disable-next-line import/no-unresolved
-const cors = require('cors');
+// const cors = require('cors');
 const config = require('./config');
 const authMiddleware = require('./middleware/auth');
 const errorHandler = require('./middleware/error');
 const routes = require('./routes');
 const pkg = require('./package.json');
-// eslint-disable-next-line no-unused-vars
 
 const { port, dbUrl, secret } = config;
 
@@ -19,6 +18,7 @@ console.log(dbUrl);
 mongoose.connect(dbUrl, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
+  useCreateIndex: true,
 })
   // eslint-disable-next-line no-console
   .then(console.log('DB esta conectada'))
@@ -29,7 +29,7 @@ mongoose.connect(dbUrl, {
 app.set('config', config);
 app.set('pkg', pkg);
 // parse application/x-www-form-urlencoded
-app.use(cors());
+// app.use(cors());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(authMiddleware(secret));

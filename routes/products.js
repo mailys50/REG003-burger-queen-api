@@ -79,9 +79,6 @@ module.exports = (app, nextMain) => {
    * @code {403} si no es admin
    * @code {404} si el producto con `productId` indicado no existe?
    */
-  // app.post('/products', requireAdmin, (req, resp, next) => {
-  // });
-  // app.post('/products', postProduct);
   app.post('/products', requireAdmin, postProduct);
 
   /**

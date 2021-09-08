@@ -28,7 +28,7 @@ describe('crear un enlace de paginacion', () => {
     expect(pagination(resp, url, page, limit, total)).toEqual(result);
   });
 });
-describe('crear un enlace de paginacion', () => {
+describe('enlace de paginacion', () => {
   const resp = {
     //   tiene pagina anterior y no tiene pagina siguient
     hasPrevPage: true,
