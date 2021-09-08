@@ -3,11 +3,15 @@ const Order = require('../model/order-model');
 const { pagination } = require('./pagination');
 
 // crear odenes
+// async define una función asíncrona, la cual devuelve un objeto
+// eslint-disable-next-line max-len
+// wait es usado para esperar a una Promise. Sólo puede ser usado dentro de una función async function.
 module.exports = {
   postOrder: async (req, resp, next) => {
     try {
       if (Object.keys(req.body).length === 0) return next(400);
-
+      // eslint-disable-next-line max-len
+      // La función res.sendStatus () para establecer el código de estado HTTP de respuesta en statusCode y enviar su representación de cadena como el cuerpo de la respuesta.
       if (!req.body.products || req.body.products.length === 0) {
         return resp.sendStatus(400);
       }

@@ -24,7 +24,7 @@ module.exports = (secret) => (req, resp, next) => {
       return next(403);
     }
     // eslint-disable-next-line no-console
-    console.log('autorizado');
+    // console.log('autorizado');
     req.authUser = authUser;
     return next();
   });
